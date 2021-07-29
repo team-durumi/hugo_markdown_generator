@@ -38,7 +38,7 @@ child_dirs.each_with_index do |dir_path, i|
         f << "lastmod: \n"
         f << "title: #{directory_name}\n"
         f << "weight: \n"
-        f << "type: \n"
+        f << "type: page\n"
         f << "---\n"
       }
       puts "[Ruby Markdown Generator 4 HUGO] '_index.md' created in '#{relative_directory}'"
