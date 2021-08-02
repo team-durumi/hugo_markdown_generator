@@ -4,7 +4,7 @@ puts "[Ruby Markdown Generator 4 HUGO]"
 puts "[Ruby Markdown Generator 4 HUGO] Script ititiated."
 options = {}
 OptionParser.new do |opt|
-  opt.on('-r', '--root ROOT_DIRECTORY') { |o| options[:root] = o }
+  opt.on('-d', '--directory DIRECTORY') { |o| options[:root] = o }
 end.parse!
 # puts options[:root].nil?
 unless !options.empty? && !options[:root].nil?

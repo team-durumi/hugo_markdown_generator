@@ -3,5 +3,6 @@ Ruby Markdown Handler Script for Hugo
 
 ## Markdown Generator
 ```
-ruby markdown_generator.rb -r 'path/to/hugo/items'
+cd path/to/this/repo
+ruby markdown_generator.rb -d 'path/to/hugo/items'
 ```
