@@ -1,6 +1,7 @@
-# hugo_markdown_generator
-Ruby Markdown Generator for Hugo
+# Hugo Markdown Handler
+Ruby Markdown Handler Script for Hugo
 
+## Markdown Generator
 ```
 ruby markdown_generator.rb -r 'path/to/hugo/items'
 ```
