@@ -24,29 +24,36 @@ puts "[Ruby Markdown Generator 4 HUGO]"
 child_dirs.each_with_index do |dir_path, i|
   relative_directory = dir_path.sub(hugo_items_dir + '/', '')
   directory_name = dir_path.split('/').last
+  puts "[Ruby Markdown Generator 4 HUGO]"
   puts "[Ruby Markdown Generator 4 HUGO] ##{(i+1).to_s.rjust(3, "0")}      | Inspecting directory: '#{relative_directory}'"
-  valid_entries = Dir.entries(dir_path).reject{|x| !File.file?(dir_path + x)  || x[0] == '.' || File.extname(x) == '.md'}
-  # valid_entries = Dir.glob("#{dir_path}*").reject{|var| File.extname(var) == '.md' }
-  if valid_entries.empty?
-    puts "[Ruby Markdown Generator 4 HUGO] ##{(i+1).to_s.rjust(3, "0")}      | '#{relative_directory}' is not a directory that immediately contains files. Attempting to create '_index.md'..."
-    if Dir.entries(dir_path).include?("_index.md")
-      puts "[Ruby Markdown Generator 4 HUGO] ##{(i+1).to_s.rjust(3, "0")}      | '_index.md' already exists in '#{relative_directory}' Skipping..."
+  if Dir.entries(dir_path).include?("_index.md")
+    puts "[Ruby Markdown Generator 4 HUGO] ##{(i+1).to_s.rjust(3, "0")}      | '_index.md' already exists in '#{relative_directory}'"
+  else
+    puts "[Ruby Markdown Generator 4 HUGO] ##{(i+1).to_s.rjust(3, "0")}      | Creating '_index.md' file in '#{relative_directory}'"
+    open(dir_path + '_index.md', 'w') { |f|
+      f << "---\n"
+      f << "lastmod: \n"
+      f << "title: #{directory_name}\n"
+      f << "weight: \n"
+      f << "type: page\n"
+      f << "---\n"
+    }
+    if File.exist?(dir_path + '_index.md')
+      puts "[Ruby Markdown Generator 4 HUGO] ##{(i+1).to_s.rjust(3, "0")}      | '_index.md' created in '#{relative_directory}'"
     else
-      puts "[Ruby Markdown Generator 4 HUGO] ##{(i+1).to_s.rjust(3, "0")}      | Creating '_index.md' file in '#{relative_directory}'"
-      open(dir_path + '_index.md', 'w') { |f|
-        f << "---\n"
-        f << "lastmod: \n"
-        f << "title: #{directory_name}\n"
-        f << "weight: \n"
-        f << "type: page\n"
-        f << "---\n"
-      }
-      puts "[Ruby Markdown Generator 4 HUGO] '_index.md' created in '#{relative_directory}'"
+      puts "[Ruby Markdown Generator 4 HUGO] ##{(i+1).to_s.rjust(3, "0")}      | ERROR :::: '_index.md' failed to created in '#{relative_directory}' "
+      return false
     end
+  end
+  puts "[Ruby Markdown Generator 4 HUGO] ##{(i+1).to_s.rjust(3, "0")}      | Checking if this directory has files contained."
+  # valid_entries = Dir.glob("#{dir_path}*").reject{|var| File.extname(var) == '.md' } # this seems to include the folder itself.
+  valid_entries = Dir.entries(dir_path).reject{|x| !File.file?(dir_path + x)  || x[0] == '.' || File.extname(x) == '.md'}
+  if valid_entries.empty?
+    puts "[Ruby Markdown Generator 4 HUGO] ##{(i+1).to_s.rjust(3, "0")}      | '#{relative_directory}' is not a directory that immediately contains files. Skipping..."
     puts "[Ruby Markdown Generator 4 HUGO]"
   else
     puts "[Ruby Markdown Generator 4 HUGO] ##{(i+1).to_s.rjust(3, "0")}      | '#{relative_directory}' has #{valid_entries.count} files contained."
-    puts "[Ruby Markdown Generator 4 HUGO]"
+    puts "[Ruby Markdown Generator 4 HUGO] ##{(i+1).to_s.rjust(3, "0")}      | "
     # file_paths = valid_entries
     file_paths = Dir.glob("#{dir_path}*").reject{|var| File.extname(var) == '.md' }
     file_paths.each_with_index do |file_path, j|
@@ -57,6 +64,7 @@ child_dirs.each_with_index do |dir_path, i|
       md_file_path = file_path[0...-(extension.length)] + ".md"
       if File.exist?(md_file_path)
         puts "[Ruby Markdown Generator 4 HUGO] ##{(i+1).to_s.rjust(3, "0")}-#{(j+1).to_s.rjust(4, "0")} | Markdown file exists for '#{relative_file_path}'"
+        puts "[Ruby Markdown Generator 4 HUGO] ##{(i+1).to_s.rjust(3, "0")}      | "
       else
         puts "[Ruby Markdown Generator 4 HUGO] ##{(i+1).to_s.rjust(3, "0")}-#{(j+1).to_s.rjust(4, "0")} | NO markdown file exists for '#{relative_file_path}'"
         puts "[Ruby Markdown Generator 4 HUGO] ##{(i+1).to_s.rjust(3, "0")}-#{(j+1).to_s.rjust(4, "0")} | Creating markdown file for '#{filename + extension}'"
@@ -86,10 +94,11 @@ child_dirs.each_with_index do |dir_path, i|
         }
         if File.exist?(md_file_path)
           puts "[Ruby Markdown Generator 4 HUGO] ##{(i+1).to_s.rjust(3, "0")}-#{(j+1).to_s.rjust(4, "0")} | '#{filename}.md' is successfully created."
+          puts "[Ruby Markdown Generator 4 HUGO] ##{(i+1).to_s.rjust(3, "0")}      | "
         end
       end
-      puts "[Ruby Markdown Generator 4 HUGO]"
     end
   end
 end
+puts "[Ruby Markdown Generator 4 HUGO]"
 puts "[Ruby Markdown Generator 4 HUGO] Script END"
