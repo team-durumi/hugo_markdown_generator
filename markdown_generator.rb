@@ -78,7 +78,7 @@ child_dirs.each_with_index do |dir_path, i|
     file_paths.each_with_index do |file_path, j|
       relative_file_path = file_path.sub(hugo_items_dir+'/','')
       puts "[Ruby Markdown Generator 4 HUGO] ##{(i+1).to_s.rjust(3, "0")}-#{(j+1).to_s.rjust(4, "0")} | Inspecting '#{relative_file_path}'"
-      remote_url = options[:remote_url]
+      remote_url = options[:remote_url].strip unless options[:remote_url].nil?
       filename = File.basename(file_path).sub(File.extname(file_path), '')
       extension = File.extname(file_path)
       md_file_path = file_path[0...-(extension.length)] + ".md"
@@ -90,9 +90,10 @@ child_dirs.each_with_index do |dir_path, i|
         puts "[Ruby Markdown Generator 4 HUGO] ##{(i+1).to_s.rjust(3, "0")}-#{(j+1).to_s.rjust(4, "0")} | NO markdown file exists for '#{relative_file_path}'"
         puts "[Ruby Markdown Generator 4 HUGO] ##{(i+1).to_s.rjust(3, "0")}-#{(j+1).to_s.rjust(4, "0")} | Creating markdown file for '#{filename + extension}'"
         component_path = file_path.sub(hugo_items_dir, 'items')
-        unless options[:remote_url].nil?
-          component_path = component_path.sub('items/', options[:remote_url][-1] == '/' ? options[:remote_url] : options[:remote_url] + '/')
+        unless remote_url.nil?
+          component_path = component_path.sub('items/', remote_url[-1] == '/' ? remote_url : remote_url + '/')
         end
+        # component_path = component_path.gsub(' ', '+') if remote_url.include?('amazonaws') ## seems unnecessary
         open(md_file_path, 'w') { |f|
           f << "---\n"
           f << "reference_code: \n"
