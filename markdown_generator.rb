@@ -93,7 +93,7 @@ child_dirs.each_with_index do |dir_path, i|
         unless remote_url.nil?
           component_path = component_path.sub('items/', remote_url[-1] == '/' ? remote_url : remote_url + '/')
         end
-        # component_path = component_path.gsub(' ', '+') if remote_url.include?('amazonaws') ## seems unnecessary
+        component_path = component_path.gsub(' ', '+') if remote_url.include?('amazonaws') 
         open(md_file_path, 'w') { |f|
           f << "---\n"
           f << "reference_code: \n"
