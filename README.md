@@ -5,12 +5,17 @@ Ruby Markdown Handler Script for Hugo Contents.
 * When hugo content exists locally. Make sure to specify hugo items directory.
 ```
 $ cd path/to/this/repo
-$ ruby markdown_generator.rb -d 'path/to/hugo/content/items'
+$ ruby markdown_generator.rb -b 'path/to/hugo/content/items'
 ```
 * Specify remote url with option if hugo components are remotely stored.
 ```
 $ cd path/to/this/repo
-$ ruby markdown_generator.rb -d 'path/to/hugo/content/items' -r 'https://example.bucket.com/items_root' 
+$ ruby markdown_generator.rb -b 'path/to/hugo/content/items' -r 'https://example.bucket.com/items_root'
+```
+* Or Specify hugo contents directory name if hugo components are locally stored.
+```
+$ cd path/to/this/repo
+$ ruby markdown_generator.rb -b 'path/to/hugo/content/items' -c 'blog'
 ```
 
 ## [Shell Script to Deleting Markdown Files Recursively](https://www.baeldung.com/linux/recursively-delete-files-with-extension)

@@ -6,15 +6,16 @@ puts "[Ruby Markdown Generator 4 HUGO] Script ititiated."
 
 options = {}
 OptionParser.new do |opt|
-  opt.on('-d', '--directory DIRECTORY') { |o| options[:directory] = o }
+  opt.on('-b', '--base_directory BASE_DIRECTORY') { |o| options[:base_directory] = o }
   opt.on('-r', '--remote_url REMOTE_URL') { |o| options[:remote_url] = o }
+  opt.on('-c', '--contents_directory_name CONTENTS_DIRECTORY_NAME(default: \'items\')') { |o| options[:contents_directory_name] = o }
 end.parse!
 
-unless !options.empty? && !options[:directory].nil?
+unless !options.empty? && !options[:base_directory].nil?
   puts "[Ruby Markdown Generator 4 HUGO] Root directory specification required for the script to run. Please re-run the script with '-h' for help."
   return false
 end
-hugo_items_dir = File.expand_path(options[:directory])
+hugo_items_dir = File.expand_path(options[:base_directory])
 unless File.directory?(hugo_items_dir)
   puts "[Ruby Markdown Generator 4 HUGO] Invalid directory. Exiting the script."
   return false
@@ -22,9 +23,17 @@ end
 
 if options[:remote_url].nil?
   puts "[Ruby Markdown Generator 4 HUGO] You have not entered any remote_url for your content files. This means that your markdown file will include local file paths."
+  # remote url 이 있으면 contents_directory_name 이 무의미할듯.
+  if options[:contents_directory_name].nil?
+    puts "[Ruby Markdown Generator 4 HUGO] You have not entered any hugo content directory name for your content files. This script will resort to default name as 'items'."
+  else
+    puts "[Ruby Markdown Generator 4 HUGO] You have entered \"#{options[:contents_directory_name]}\" as the hugo content directory name for your files. This will be prepended to your file paths."
+    puts "[Ruby Markdown Generator 4 HUGO] This automatically ignored any content_directory_name you might have put as options."
+  end
 else
   puts "[Ruby Markdown Generator 4 HUGO] You have entered \"#{options[:remote_url]}\" as the remote_url for your content files. This will be prepended to your file paths."
 end
+
 puts
 puts "Press 'Y' to continue the script or anything else to abort."
 x = gets.chomp.upcase.strip
@@ -89,11 +98,12 @@ child_dirs.each_with_index do |dir_path, i|
       else
         puts "[Ruby Markdown Generator 4 HUGO] ##{(i+1).to_s.rjust(3, "0")}-#{(j+1).to_s.rjust(4, "0")} | NO markdown file exists for '#{relative_file_path}'"
         puts "[Ruby Markdown Generator 4 HUGO] ##{(i+1).to_s.rjust(3, "0")}-#{(j+1).to_s.rjust(4, "0")} | Creating markdown file for '#{filename + extension}'"
-        component_path = file_path.sub(hugo_items_dir, 'items')
+        contents_directory_name = options[:contents_directory_name].nil? ? 'items' : options[:contents_directory_name]
+        component_path = file_path.sub(hugo_items_dir, contents_directory_name)
         unless remote_url.nil?
-          component_path = component_path.sub('items/', remote_url[-1] == '/' ? remote_url : remote_url + '/')
+          component_path = component_path.sub(contents_directory_name + '/', remote_url[-1] == '/' ? remote_url : remote_url + '/')
+          component_path = component_path.gsub(' ', '+') if remote_url.include?('amazonaws')
         end
-        component_path = component_path.gsub(' ', '+') if remote_url.include?('amazonaws') 
         open(md_file_path, 'w') { |f|
           f << "---\n"
           f << "reference_code: \n"
