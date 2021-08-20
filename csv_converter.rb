@@ -2,6 +2,9 @@
 require 'csv'
 require 'optparse'
 
+puts "[Ruby Markdown Generator 4 HUGO]"
+puts "[Ruby Markdown Generator 4 HUGO] Script ititiated."
+
 options={}
 OptionParser.new do |opt|
   opt.on('-f', '--file CSV_FILE_PATH') { |o| options[:file] = o }
@@ -29,16 +32,25 @@ unless File.directory?(output_directory)
   puts "[Ruby Markdown Generator 4 HUGO] Invalid output directory. Exiting the script."
   return false
 end
+
+puts "[Ruby Markdown Generator 4 HUGO] Proceeding with the script."
+puts "[Ruby Markdown Generator 4 HUGO]"
+
 # headers = CSV.read(csv_directory, headers: true).headers
 data = CSV.read(csv_directory, headers: true)
 data.each_with_index do |row , index|
-  file_title = "#{row["reference_code"]}.md"
+  file_title = "#{row["reference_code"]}. #{row["title"]}.md"
+  file_title = file_title.gsub('/', ',') if file_title.include?('/') # some titles seem to have '/'
+  # puts file_title
   open(output_directory + '/' + file_title, 'w') { |f|
     f << "---\n"
-    # f << "#{} #{} \n"
     row.map do |k, v|
-      f << "#{k}: #{v}\n"
+      # f << "#{k}: #{v}\n"
+      f << "#{k}: \"#{v}\"\n" # not sure if its better to wrap the content in quotation.
     end
     f << "---\n"
   }
 end
+puts "[Ruby Markdown Generator 4 HUGO]"
+puts "[Ruby Markdown Generator 4 HUGO] Script END"
+
