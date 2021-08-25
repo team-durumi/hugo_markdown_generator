@@ -12,7 +12,7 @@ OptionParser.new do |opt|
 end.parse!
 
 unless !options.empty? && !options[:base_directory].nil?
-  puts "[Ruby Markdown Generator 4 HUGO] Root directory specification required for the script to run. Please re-run the script with '-h' for help."
+  puts "[Ruby Markdown Generator 4 HUGO] Base directory specification required for the script to run. Please re-run the script with '-h' for help."
   return false
 end
 hugo_items_dir = File.expand_path(options[:base_directory])

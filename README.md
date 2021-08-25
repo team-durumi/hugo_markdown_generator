@@ -21,9 +21,9 @@ $ ruby markdown_generator.rb -b 'path/to/hugo/content/items' -c 'blog'
 ## Markdown Generator using comma separated values.
 ```
 $ cd path/to/this/repo
-$ ruby csv_converter.rb -f 'path/to/csv/file' -d 'path/to/where/you/want/markdown'
+$ ruby csv_converter.rb -f 'path/to/csv/file' -d 'path/to/where/you/want/markdown' -t 'multiple taxonomy terms separated by space'
 ```
-* Does not (yet) create any directory structured (taxonomy) or accommodate for the multiple lines of the csv cells.
+* Does not (yet) create any directory structures of files or accommodate for the multiple lines of the csv cells.
 
 ## [Shell Script to Deleting Markdown Files Recursively](https://www.baeldung.com/linux/recursively-delete-files-with-extension)
 ```
