@@ -9,6 +9,7 @@ options={}
 OptionParser.new do |opt|
   opt.on('-f', '--file CSV_FILE_PATH') { |o| options[:file] = o }
   opt.on('-d', '--directory OUTPUT_DIRECTORY_PATH') { |o| options[:directory] = o }
+  opt.on('-t', '--taxonomy_terms TAXONOMY_TERMS( \' term term term \' )') { |o| options[:taxonomy_terms] = o }
 end.parse!
 
 unless !options.empty? && !options[:file].nil?
@@ -33,6 +34,40 @@ unless File.directory?(output_directory)
   return false
 end
 
+terms_array = []
+if !options.empty? && !options[:taxonomy_terms].nil?
+  terms = options[:taxonomy_terms] + ' components'
+else
+  puts "[Ruby Markdown Generator 4 HUGO] You have not entered any taxonomy terms. Would you like to type them now?"
+  puts
+  puts "Press 'Y' to type in taxonomy terms or anything else to continue without it."
+  x = gets.chomp.upcase.strip
+  puts "You entered: #{x}"
+  if x == 'Y'
+    puts
+    puts "Type terms to use as taxonomy terms. Please use space to write multiple terms."
+    terms = gets.chomp.downcase.strip
+    puts "You entered: #{terms}"
+    terms = terms + ' components'
+  else
+    puts "[Ruby Markdown Generator 4 HUGO] Continuing without taxonomy terms."
+    terms = 'components'
+  end
+end
+terms.split(' ').each {|term| terms_array.push(term)}
+terms_array = terms_array.uniq
+puts "[Ruby Markdown Generator 4 HUGO] taxonomy_terms: #{terms_array}"
+term_delimiter = "|"
+puts "[Ruby Markdown Generator 4 HUGO] * taxonomy_term delimiter: \"#{term_delimiter}\" "
+puts "[Ruby Markdown Generator 4 HUGO] "
+
+puts "Press 'Y' to continue the script or anything else to abort."
+x = gets.chomp.upcase.strip
+unless x == 'Y'
+  puts "[Ruby Markdown Generator 4 HUGO] Aborting the script as you wish."
+  return false
+end
+
 puts "[Ruby Markdown Generator 4 HUGO] Proceeding with the script."
 puts "[Ruby Markdown Generator 4 HUGO]"
 
@@ -45,12 +80,18 @@ data.each_with_index do |row , index|
   open(output_directory + '/' + file_title, 'w') { |f|
     f << "---\n"
     row.map do |k, v|
-      # f << "#{k}: #{v}\n"
-      f << "#{k}: \"#{v}\"\n" # not sure if its better to wrap the content in quotation.
+      if terms_array.include?(k)
+        f << "#{k}: \n"
+        v.split(term_delimiter).each do |vv|
+          f << "  - \"#{vv.strip}\"\n"
+        end
+      else
+        # f << "#{k}: #{v}\n"
+        f << "#{k}: \"#{v}\"\n" # not sure if its better to wrap the content in quotation.
+      end
     end
     f << "---\n"
   }
 end
 puts "[Ruby Markdown Generator 4 HUGO]"
 puts "[Ruby Markdown Generator 4 HUGO] Script END"
-
