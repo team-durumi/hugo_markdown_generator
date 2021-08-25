@@ -10,6 +10,8 @@ OptionParser.new do |opt|
   opt.on('-f', '--file CSV_FILE_PATH') { |o| options[:file] = o }
   opt.on('-d', '--directory OUTPUT_DIRECTORY_PATH') { |o| options[:directory] = o }
   opt.on('-t', '--taxonomy_terms TAXONOMY_TERMS( \' term term term \' )') { |o| options[:taxonomy_terms] = o }
+  opt.on('-t' , '--taxonomy_terms TAXONOMY_TERMS( \'term term term\' )') { |o| options[:taxonomy_terms] = o }
+  opt.on('-b' , '--boolean_field BOOLEAN_FIELD_TO_FILTER_TO_MARKDOWN') { |o| options[:boolean_field] = o }
 end.parse!
 
 unless !options.empty? && !options[:file].nil?
@@ -34,8 +36,14 @@ unless File.directory?(output_directory)
   return false
 end
 
+if !options[:boolean_field].nil?
+  puts "[Ruby Markdown Generator 4 HUGO] BOOLEAN_FIELD_TO_FILTER_TO_MARKDOWN = #{options[:boolean_field]}. This will only create markdown for the rows that have #{options[:boolean_field]} as TRUE."
+else
+  puts "[Ruby Markdown Generator 4 HUGO] You did not specify BOOLEAN_FIELD_TO_FILTER_TO_MARKDOWN option. This will create markdown for all the rows in CSV_FILE."
+end
+
 terms_array = []
-if !options.empty? && !options[:taxonomy_terms].nil?
+if !options[:taxonomy_terms].nil?
   terms = options[:taxonomy_terms] + ' components'
 else
   puts "[Ruby Markdown Generator 4 HUGO] You have not entered any taxonomy terms. Would you like to type them now?"
@@ -77,6 +85,10 @@ data.each_with_index do |row , index|
   file_title = "#{row["reference_code"]}. #{row["title"]}.md"
   file_title = file_title.gsub('/', ',') if file_title.include?('/') # some titles seem to have '/'
   # puts file_title
+
+  if !options[:boolean_field].nil? && row[options[:boolean_field]].strip.upcase != "TRUE"
+    next
+  end
   open(output_directory + '/' + file_title, 'w') { |f|
     f << "---\n"
     row.map do |k, v|

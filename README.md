@@ -21,7 +21,12 @@ $ ruby markdown_generator.rb -b 'path/to/hugo/content/items' -c 'blog'
 ## Markdown Generator using comma separated values.
 ```
 $ cd path/to/this/repo
-$ ruby csv_converter.rb -f 'path/to/csv/file' -d 'path/to/where/you/want/markdown' -t 'multiple taxonomy terms separated by space'
+$ ruby csv_converter.rb -f 'path/to/csv/file' -d 'directory/to/save/markdown' -t 'multiple taxonomy terms separated by space'
+```
+* use '-b' option to specify which rows convert to markdown.
+```
+$ ruby csv_converter.rb -f 'path/to/csv/file' -d 'directory/to/save/markdown' -b 'boolean_field' # this only creates markdown files for rows that have the boolean_field set to "TRUE".
+
 ```
 * Does not (yet) create any directory structures of files or accommodate for the multiple lines of the csv cells.
 
