@@ -46,7 +46,11 @@ puts "[Ruby Markdown Generator 4 HUGO] Proceeding with the script."
 puts "[Ruby Markdown Generator 4 HUGO]"
 
 puts "[Ruby Markdown Generator 4 HUGO] Inspecting directories under '#{hugo_items_dir}/'"
-child_dirs = Dir.glob(hugo_items_dir + '/**/*/')
+valid_children = Dir.entries(hugo_items_dir).reject {|dir| %w{# .}.include? dir[0]} # trying to skip '#recycle' in synology nas 
+child_dirs = []
+valid_children.map {|dir| hugo_items_dir + '/' +  dir}.each {|path| child_dirs.push(Dir.glob(path + '/**/*/'))}
+child_dirs.flatten!
+child_dirs.reject! {|dir| dir.include? '@eaDir'} # trying to skip '@eaDir' in synology nas 
 puts "[Ruby Markdown Generator 4 HUGO] There are total #{child_dirs.count} directories under '#{hugo_items_dir}'"
 puts "[Ruby Markdown Generator 4 HUGO]"
 child_dirs.each_with_index do |dir_path, i|
