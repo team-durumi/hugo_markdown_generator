@@ -1,0 +1,3 @@
+base_directory:
+path_to_hugo_content: 
+hugo_content_directory_name: 'items'
