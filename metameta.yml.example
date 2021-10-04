@@ -1,0 +1,30 @@
+base_directory: 
+remote_url: 
+hugo_content_directory_name: 
+
+front_matters:
+  index:
+    - lastmod
+    - title
+    - weight
+    - type
+  single:
+    - reference_code
+    - date
+    - draft
+    - level_of_description
+    - media_type
+    - title
+    - description
+    - weight
+    - modified_at
+    - created_at
+    - link
+    - components
+    - tags
+    - creators
+    - subjects
+    - sources
+    - venues
+    - public_access_status
+    - copyright_status

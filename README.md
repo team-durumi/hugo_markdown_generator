@@ -1,6 +1,57 @@
 # Hugo Markdown Handler
 Ruby Markdown Handler Script for Hugo Contents.
 
+## Content Metadata to JSON Template
+This script creates JSON files that serve as a template for your front matters.
+
+1. Clone the repo and create metameta.yml to include options for the script to run.
+```
+$ cd path/to/this/repo
+$ cp metameta.yml.example metameta.yml
+```
+
+2. Fill in the options
+```
+# metameta.yml
+base_directory: # where you want to run your script
+remote_url: # remote url for files if you are storing them in cloud services
+hugo_content_directory_name: # name of your hugo content folder
+
+front_matters:
+  index: # add list of metas you want to create for _index.md
+    - lastmod
+    - title
+    - weight
+    - type
+  single: # add list of metas you want to create for filename.md
+    - reference_code
+    - date
+    - draft
+    - level_of_description
+    - media_type
+    - title
+    - description
+    - weight
+    - modified_at
+    - created_at
+    - link
+    - components
+    - tags
+    - creators
+    - subjects
+    - sources
+    - venues
+    - public_access_status
+    - copyright_status
+```
+
+3. run the script.
+```
+$ ruby content_metadata_to_json_template.rb
+```
+
+_____________
+
 ## Markdown Generator for Specfic Hugo Content.
 * When hugo content exists locally. Make sure to specify hugo items directory.
 ```
