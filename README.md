@@ -1,5 +1,5 @@
 # Hugo Markdown Handler
-Ruby Markdown Handler Script for Hugo Contents.
+Hugo content frontmatter handling scripts written in Ruby.
 
 ## Content Metadata to JSON Template
 This script creates JSON files that serve as a template for your front matters.
@@ -48,6 +48,27 @@ front_matters:
 3. run the script.
 ```
 $ ruby content_metadata_to_json_template.rb
+```
+
+## Front Matter JSON to YAML Markdown
+This script fetches hugo frontmatter data in JSON format and generates YAML markdown at a desired destination.
+
+1. Clone the repo and create markdown_options.yml to include options for the script to run.
+```
+$ cd path/to/this/repo
+$ cp markdown_options.yml.example markdown_options.yml
+```
+2. Fill in the options
+```
+# markdown_options.yml
+base_directory: # where you want to run your script
+path_to_hugo_content: # path upto hugo CONTENT directory
+hugo_content_directory_name: # name of your hugo content folder under hugo CONTENT directory
+
+```
+3. Run the Script.
+```
+$ ruby frontmatter_json_to_yaml_markdown.rb
 ```
 
 _____________
