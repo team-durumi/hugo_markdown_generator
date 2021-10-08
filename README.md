@@ -1,7 +1,10 @@
 # Hugo Markdown Handler
 Hugo content frontmatter handling scripts written in Ruby.
 
-## Content Metadata to JSON Template
+1. Create Front Matter Markdown from Content Directory Structure
+2. Create Front Matter Markdown from CSV.
+
+## Create Front Matter Markdown Template from the Content Directory Structure
 This script creates JSON files that serve as a template for your front matters.
 
 1. Clone the repo and create metameta.yml to include options for the script to run.
@@ -47,50 +50,17 @@ front_matters:
 
 3. run the script.
 ```
-$ ruby content_metadata_to_json_template.rb
+$ ruby directory_structure_to_markdown.rb
 ```
 
-## Front Matter JSON to YAML Markdown
-This script fetches hugo frontmatter data in JSON format and generates YAML markdown at a desired destination.
+4. Move Markdown Files in the Current Directory Structure to Hugo Contents Folder
 
-1. Clone the repo and create markdown_options.yml to include options for the script to run.
+[Shell Command to moving only markdown files from one directory to another.](https://ostechnix.com/copy-specific-file-types-while-keeping-directory-structure-in-linux/)
 ```
-$ cd path/to/this/repo
-$ cp markdown_options.yml.example markdown_options.yml
-```
-2. Fill in the options
-```
-# markdown_options.yml
-base_directory: # where you want to run your script
-path_to_hugo_content: # path upto hugo CONTENT directory
-hugo_content_directory_name: # name of your hugo content folder under hugo CONTENT directory
-
-```
-3. Run the Script.
-```
-$ ruby frontmatter_json_to_yaml_markdown.rb
+$ rsync -a -m --include '*/' --include '*.md' --exclude '*' path/from/ path/to/hugo/content/
 ```
 
-_____________
-
-## Markdown Generator for Specfic Hugo Content.
-* When hugo content exists locally. Make sure to specify hugo items directory.
-```
-$ cd path/to/this/repo
-$ ruby markdown_generator.rb -b 'path/to/hugo/content/items'
-```
-* Specify remote url with option if hugo components are remotely stored.
-```
-$ cd path/to/this/repo
-$ ruby markdown_generator.rb -b 'path/to/hugo/content/items' -r 'https://example.bucket.com/items_root'
-```
-* Or Specify hugo contents directory name if hugo components are locally stored.
-```
-$ cd path/to/this/repo
-$ ruby markdown_generator.rb -b 'path/to/hugo/content/items' -c 'blog'
-```
-
-## Markdown Generator using comma separated values.
+## Generate Markdown Template using CSV.
 ```
 $ cd path/to/this/repo
 $ ruby csv_converter.rb -f 'path/to/csv/file' -d 'directory/to/save/markdown' -t 'multiple taxonomy terms separated by space'
@@ -102,7 +72,8 @@ $ ruby csv_converter.rb -f 'path/to/csv/file' -d 'directory/to/save/markdown' -b
 ```
 * Does not (yet) create any directory structures of files or accommodate for the multiple lines of the csv cells.
 
-## [Shell Script to Deleting Markdown Files Recursively](https://www.baeldung.com/linux/recursively-delete-files-with-extension)
+________________
+## [Shell Command to Deleting Markdown Files Recursively](https://www.baeldung.com/linux/recursively-delete-files-with-extension)
 ```
 $ cd path/to/hugo/content/items
 $ find . -type f -name '*.md' -print # double-check things that would be deleted

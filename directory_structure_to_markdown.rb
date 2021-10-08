@@ -66,8 +66,9 @@ all_children.each_with_index do |path, i|
     # hash["weight"] = path.sub(items_base_dir, '').split('/').reject {|e| e.empty?}.count # if hash["weight"]
     hash["lastmod"] = File.mtime(path).strftime("%Y-%m-%d") # if hash["lastmod"]
 
-    File.open(path + "/_index.json", "w") do |f|
-      f.write(hash.to_json)
+    File.open(path + "/_index.md", "w") do |f|
+      f.write(YAML.dump(JSON.parse(hash.to_json)))
+      f << "---\n"
     end
   elsif File.file?(path)
     # type = 'single'
@@ -116,9 +117,10 @@ all_children.each_with_index do |path, i|
     end
       
     extension = File.extname(path)
-    json_file_path = path[0...-(extension.length)] + ".json"
-    File.open(json_file_path, "w") do |f|
-      f.write(hash.to_json)
+    md_file_path = path[0...-(extension.length)] + ".md"
+    File.open(md_file_path, "w") do |f|
+      f.write(YAML.dump(JSON.parse(hash.to_json)))
+      f << "---\n"
     end
   else
     puts "[Hugo Contents Directories 2 JSON] :::WARNING::: Check if #{path} is a valid path."
