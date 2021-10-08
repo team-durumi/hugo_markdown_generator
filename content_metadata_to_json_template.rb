@@ -63,7 +63,7 @@ all_children.each_with_index do |path, i|
     directory_name = path.split('/').last
     hash["title"] = directory_name # if hash["title"]
     hash["type"] = 'page' # if hash["type"]
-    hash["weight"] = path.sub(items_base_dir, '').split('/').reject {|e| e.empty?}.count # if hash["weight"]
+    # hash["weight"] = path.sub(items_base_dir, '').split('/').reject {|e| e.empty?}.count # if hash["weight"]
     hash["lastmod"] = File.mtime(path).strftime("%Y-%m-%d") # if hash["lastmod"]
 
     File.open(path + "/_index.json", "w") do |f|
@@ -83,8 +83,38 @@ all_children.each_with_index do |path, i|
       component_path = component_path.sub(hugo_content_directory_name + '/', remote_url[-1] == '/' ? remote_url : remote_url + '/')
       component_path = component_path.gsub(' ', '+') if remote_url.include?('amazonaws')
     end
+    # hash["title"] = "#{directory_name}-#{filename}"
+    hash["title"] = filename
     hash["components"] = [].push(component_path)
-       
+
+    if File.extname(path) == '.pdf'
+      puts
+      puts "initiating tag process..."
+      puts "converting pdf to txt"
+      `ruby ./pdf2txt.rb "#{path}"`
+      puts "attempting to get natto"
+      require 'natto'
+      text = File.read(path + ".txt")
+      nm = Natto::MeCab.new
+      result = nm.enum_parse(text)
+      # puts result
+      tag_array = []
+      result.each do |part|
+        if ['NNG', 'NNP'].include?(part.feature.split(',').first)
+          tag_array.push(part.surface)    
+        end
+      end
+      # puts tag_array
+      keyword_frequency_desc = tag_array.each_with_object(Hash.new(0)){ |m,h| h[m] += 1 }.sort_by{ |k,v| v }.reverse
+      tags = []
+      # puts keyword_frequency_desc.first(5).map{|w| w[0] }
+      hash["tags"] = keyword_frequency_desc.first(5).map{|w| w[0] }
+      puts "done and cleaning up"
+      File.delete(path + ".txt") if File.exists? (path + ".txt")
+      puts "tag process done"
+      puts
+    end
+      
     extension = File.extname(path)
     json_file_path = path[0...-(extension.length)] + ".json"
     File.open(json_file_path, "w") do |f|
