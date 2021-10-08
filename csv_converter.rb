@@ -84,9 +84,8 @@ data = CSV.read(csv_directory, headers: true)
 data.each_with_index do |row , index|
   file_title = "#{row["reference_code"]}. #{row["title"]}.md"
   file_title = file_title.gsub('/', ',') if file_title.include?('/') # some titles seem to have '/'
-  # puts file_title
 
-  if !options[:boolean_field].nil? && row[options[:boolean_field]].strip.upcase != "TRUE"
+  unless !options[:boolean_field].nil? && !row[options[:boolean_field]].nil? && row[options[:boolean_field]].upcase == "TRUE"
     next
   end
   open(output_directory + '/' + file_title, 'w') { |f|
@@ -94,8 +93,10 @@ data.each_with_index do |row , index|
     row.map do |k, v|
       if terms_array.include?(k)
         f << "#{k}: \n"
-        v.split(term_delimiter).each do |vv|
-          f << "  - \"#{vv.strip}\"\n"
+        if v
+          v.split(term_delimiter).each do |vv|
+            f << "  - \"#{vv.strip}\"\n"
+          end
         end
       else
         # f << "#{k}: #{v}\n"
