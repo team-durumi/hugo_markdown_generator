@@ -1,0 +1,30 @@
+index: # for creating _index.md
+  string: # for front matters with single values
+    - lastmod
+    - title
+    - weight
+    - type
+  array:  # for front matters with multiple array values
+    -
+single: # for creating single pages (https://gohugo.io/content-management/organization/#single-pages-in-sections)
+  string: # for front matters with single values
+    - reference_code
+    - date
+    - draft
+    - level_of_description
+    - media_type
+    - title
+    - description
+    - weight
+    - modified_at
+    - created_at
+    - link
+    - public_access_status
+    - copyright_status
+  array:  # for front matters with multiple array values
+    - components
+    - tags
+    - creators
+    - subjects
+    - sources
+    - venues
