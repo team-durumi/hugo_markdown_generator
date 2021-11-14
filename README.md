@@ -1,32 +1,31 @@
 # Hugo Markdown Handler
-Hugo content frontmatter handling scripts written in Ruby.
+Hugo content [Front Matter](https://gohugo.io/content-management/front-matter/) handling scripts written in Ruby.
 
-1. Create Front Matter Markdown from Content Directory Structure
-2. Create Front Matter Markdown from CSV.
+Scripts in this repo does one of two things.
+1. [Generate Front Matter Markdown within the desired content directory based on settings declared in front_matter_schema.yml.] (## Generate Front Matter Markdown from front_matter_schema.yml)
+2. [Generate Front Matter Markdown within the desired content directory by importing CSV file with declared metadata.] (## Generate Markdown Template using CSV)
 
-## Create Front Matter Markdown Template from the Content Directory Structure
-This script creates JSON files that serve as a template for your front matters.
-
-1. Clone the repo and create metameta.yml to include options for the script to run.
+## Generate Front Matter Markdown from front_matter_schema.yml
+This script creates front matter markdown files.
+1. Clone the repo and create front_matter_schema.yml.
 ```
 $ cd path/to/this/repo
-$ cp metameta.yml.example metameta.yml
+$ cp front_matter_schema.yml.example front_matter_schema.yml
 ```
 
-2. Fill in the options
+2. Define metadata keys in front_matter_schema.yml.
 ```
-# metameta.yml
-base_directory: # where you want to run your script
-remote_url: # remote url for files if you are storing them in cloud services
-hugo_content_directory_name: # name of your hugo content folder
-
-front_matters:
-  index: # add list of metas you want to create for _index.md
+# front_matter_schema.yml
+index: # for creating _index.md
+  string: # for front matters with single values
     - lastmod
     - title
     - weight
     - type
-  single: # add list of metas you want to create for filename.md
+  array:  # for front matters with multiple array values
+    -
+single: # for creating single pages (https://gohugo.io/content-management/organization/#single-pages-in-sections)
+  string: # for front matters with single values
     - reference_code
     - date
     - draft
@@ -38,22 +37,32 @@ front_matters:
     - modified_at
     - created_at
     - link
+    - public_access_status
+    - copyright_status
+  array:  # for front matters with multiple array values
     - components
     - tags
     - creators
     - subjects
     - sources
     - venues
-    - public_access_status
-    - copyright_status
+```
+3. run the script with options
+
+```
+$ ruby  directory_structure_to_markdown.rb \
+        --base '/path/to/hugo/section' \
+```
+* 파일명에 메타데이터를 넣어서 front matter를 생성하려고 하는 경우.
+
+```
+$ ruby  directory_structure_to_markdown.rb \
+        --base '/path/to/hugo/section' \
+        --which parent 
+        # 특정 파일의 프론트 매터 생성시, 그 파일의 parent의 파일명을 참고하여 프론트매터를 생성. vs 'self' 선택시에는 스스로의 파일명 참고
 ```
 
-3. run the script.
-```
-$ ruby directory_structure_to_markdown.rb
-```
-
-4. Move Markdown Files in the Current Directory Structure to Hugo Contents Folder
+4. Move Markdown Files in the content directory to Hugo Contents Folder if Hugo Contents are stored remotely.
 
 [Shell Command to moving only markdown files from one directory to another.](https://ostechnix.com/copy-specific-file-types-while-keeping-directory-structure-in-linux/)
 ```
