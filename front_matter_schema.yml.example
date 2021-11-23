@@ -28,3 +28,4 @@ single: # for creating single pages (https://gohugo.io/content-management/organi
     - subjects
     - sources
     - venues
+    - events
